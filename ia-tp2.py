@@ -69,7 +69,6 @@ def perceptron_work(events):
     print("initial weights ", weights)
     iteration = 0
     while True:
-    # for i in range(30000):
         iteration += 1
         error = learn(events=events, weights=weights, learning_rate=learning_rate)
         if error < 0.01:
@@ -85,15 +84,13 @@ def learn(events, weights, learning_rate):
         x = calculate_x(event, weights)
         real_output = calculate_activation(x)
         error = event.output - real_output
-        print("error", error)
-
+        
         # Actualizo los pesos
         delta = calculate_delta(real_output, error)
         for index, single_input in enumerate(event.inputs):
             delta_weight = learning_rate * single_input * delta
             new_weight = weights[index] + delta_weight
             weights[index] = new_weight
-    print(weights)
     return error
 
 
