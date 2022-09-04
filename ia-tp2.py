@@ -71,7 +71,8 @@ def perceptron_work(events):
     while True:
         iteration += 1
         error = learn(events=events, weights=weights, learning_rate=learning_rate)
-        if error < 0.01:
+        print("Iteracion: ", iteration, "error: ", error)
+        if abs(error) <= 0.1:
             break
 
     print("iteraciones", iteration)
@@ -84,7 +85,7 @@ def learn(events, weights, learning_rate):
         x = calculate_x(event, weights)
         real_output = calculate_activation(x)
         error = event.output - real_output
-        
+
         # Actualizo los pesos
         delta = calculate_delta(real_output, error)
         for index, single_input in enumerate(event.inputs):
@@ -113,13 +114,12 @@ def random_weight():
 
 def calculate_method(events, weights):
     for index, event in enumerate(events):
-        print("Indice", index)
         x = calculate_x(event, weights)
         result = calculate_activation(x)
         print("Para la entrada ", event.inputs, " la salida es ", result)
 
 
 if __name__ == '__main__':
-    #and_work()
-    or_work()
+    and_work()
+    # or_work()
     # xor_work()
