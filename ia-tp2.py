@@ -1,12 +1,15 @@
 import math
 import random
+import matplotlib.pyplot as plt
+import numpy as np
 
+
+historical_errors = []
 
 class Event:
     def __init__(self, inputs, output):
         self.inputs = inputs  # Inputs
         self.output = output  # Expected output given inputs
-
 
 def xor_work():
     # 0 | 0 | 0
@@ -57,9 +60,9 @@ def perceptron_work(events):
     learning_rate = 0.1
 
     weights = [
-        0,
-        0,
-        0
+        0.9,
+        0.66,
+        -0.2
     ]
 
     # Agregar el 1 de control a inputs
@@ -81,7 +84,7 @@ def perceptron_work(events):
 
 
 def learn(events, weights, learning_rate):
-    for event in events:
+    for rowIndex, event in enumerate(events):
         x = calculate_x(event, weights)
         real_output = calculate_activation(x)
         error = event.output - real_output
@@ -92,6 +95,7 @@ def learn(events, weights, learning_rate):
             delta_weight = learning_rate * single_input * delta
             new_weight = weights[index] + delta_weight
             weights[index] = new_weight
+    historical_errors.append(error)
     return error
 
 
@@ -118,8 +122,27 @@ def calculate_method(events, weights):
         result = calculate_activation(x)
         print("Para la entrada ", event.inputs, " la salida es ", result)
 
+def graph_error():
+    plt.style.use('_mpl-gallery')
+
+    # make data
+    x = np.arange(0, len(historical_errors))
+    y = historical_errors
+
+    # plot
+    fig, ax = plt.subplots()
+
+    ax.plot(x, y, linewidth=1.0, color="red")
+
+    # ax.set(xlim=(0, len(historical_errors)), xticks=np.arange(0, len(historical_errors),
+    #        ylim=(-1,1), yticks=np.arange(-1,1)))
+
+    plt.show()
+
 
 if __name__ == '__main__':
-    and_work()
-    # or_work()
+    #and_work()
+    or_work()
     # xor_work()
+
+    graph_error()
