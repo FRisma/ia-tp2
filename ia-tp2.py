@@ -5,6 +5,7 @@ import numpy as np
 
 
 historical_errors = []
+historical_weights = [[] for _ in range(3)]
 
 class Event:
     def __init__(self, inputs, output):
@@ -75,7 +76,7 @@ def perceptron_work(events):
         iteration += 1
         error = learn(events=events, weights=weights, learning_rate=learning_rate)
         print("Iteracion: ", iteration, "error: ", error)
-        if abs(error) <= 0.1:
+        if abs(error) <= 0.01:
             break
 
     print("iteraciones", iteration)
@@ -95,6 +96,7 @@ def learn(events, weights, learning_rate):
             delta_weight = learning_rate * single_input * delta
             new_weight = weights[index] + delta_weight
             weights[index] = new_weight
+            historical_weights[index].append(new_weight)
     historical_errors.append(error)
     return error
 
@@ -122,20 +124,27 @@ def calculate_method(events, weights):
         result = calculate_activation(x)
         print("Para la entrada ", event.inputs, " la salida es ", result)
 
-def graph_error():
+def graph_error_and_weights():
     plt.style.use('_mpl-gallery')
 
     # make data
-    x = np.arange(0, len(historical_errors))
-    y = historical_errors
+    error_x = np.arange(0, len(historical_errors))
+    error_y = historical_errors
 
     # plot
     fig, ax = plt.subplots()
 
-    ax.plot(x, y, linewidth=1.0, color="red")
+    # ax.set_yscale('log')
 
-    # ax.set(xlim=(0, len(historical_errors)), xticks=np.arange(0, len(historical_errors),
-    #        ylim=(-1,1), yticks=np.arange(-1,1)))
+    ax.plot(error_x, error_y, label="Error", linewidth=1.0, color="red")
+
+    # for weights in historical_weights:
+    #     weight_x = np.arange(0, len(weights))
+    #     ax.plot(weight_x, weights, label="weight", linewidth=1.0, color=random.choice(["green", "yellow", "blue"]))
+
+    plt.yticks(error_y, error_y)
+    plt.xticks(range(len(error_x)), error_x)
+    plt.ylabel("Erro")
 
     plt.show()
 
@@ -145,4 +154,4 @@ if __name__ == '__main__':
     or_work()
     # xor_work()
 
-    graph_error()
+    graph_error_and_weights()
